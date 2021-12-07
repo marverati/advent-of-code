@@ -47,5 +47,5 @@ function getAverage(values) {
   return values.reduce((a, b) => a + b, 0) / values.length;
 }
 
-
 console.log(handleData1(data1));
+console.log(handleData2(data1));
