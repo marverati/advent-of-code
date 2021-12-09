@@ -72,8 +72,9 @@ function part2(map, lowPoints) {
   return biggest.reduce((a, b) => a * b, 1);
 }
 
-function findBasinSize(map, p) {
-  const points = [p];
+function findBasinSize(map, p0) {
+  // Prepare flood fill around starting point
+  const points = [p0];
   let current = 0;
   const visited = map.values.map(row => row.map(v => false));
   while (current < points.length) {
