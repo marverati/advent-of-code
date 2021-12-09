@@ -6,8 +6,8 @@ const data0 = `2199943210
 8767896789
 9899965678`
 
-const data1 = require('./09data');
-const { floodFill } = require('./_util');
+data1 = window.data1 ? window.data1 : require('./09data');
+const { floodFill } = window.require ? require('./_util') : () => {};
 
 class Heightmap {
   constructor(w, h, defaultValue = Infinity) {
@@ -90,3 +90,4 @@ const map = setupMap(data1);
 const { sum: result1, lowPoints } = part1(map);
 console.log(result1);
 console.log(part2(map, lowPoints));
+module.exports = { map, lowPoints };

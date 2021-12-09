@@ -125,8 +125,44 @@ function floodFill(startElement, getNeighborsFn, handleElement, elToReference = 
     );
 }
 
+function create2DArray(wOrFunction, h, valueOrGenerator) {
+    const map = [];
+    const generator = valueOrGenerator instanceof Function ? valueOrGenerator : () => valueOrGenerator;
+    for (let y = 0; y < h; y++) {
+        map[y] = [];
+        const w = wOrFunction instanceof Function ? wOrFunction(y) : wOrFunction;
+        for (let x = 0; x < w; x++) {
+            map[y][x] = generator();
+        }
+    }
+    map.forEachCell = (handler) => {
+        for (let y = 0; y < h; y++) {
+            const row = map[y], l = row.length;
+            for (let x = 0; x < l; x++) {
+                handler(row[x], x, y);
+            }
+        }
+    };
+    map.forEachRow = (handler) => {
+        for (let y = 0; y < h; y++) {
+            handler(map[y], y);
+        }
+    };
+    map.isInside = (x, y) => x === (x << 0) && y === (y << 0) && x >= 0 && y >= 0 && y < map.h && x < map[y].length;
+    map.get = (x, y) => map.isInside(x, y) ? map[y][x] : null;
+    map.set = (x, y, v) => {
+        if (map.isInside(x, y)) {
+            map[y][x] = v;
+        } else {
+            throw new Error("Setting illegal map position: " + x + "," + y);
+        }
+    }
+    return map;
+}
+
 module.exports = {
     dfs,
     bfs,
-    floodFill
+    floodFill,
+    create2DArray
 };
