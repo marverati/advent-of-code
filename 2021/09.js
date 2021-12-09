@@ -7,6 +7,7 @@ const data0 = `2199943210
 9899965678`
 
 const data1 = require('./09data');
+const { floodFill } = require('./_util');
 
 class Heightmap {
   constructor(w, h, defaultValue = Infinity) {
@@ -73,27 +74,16 @@ function part2(map, lowPoints) {
 }
 
 function findBasinSize(map, p0) {
-  // Prepare flood fill around starting point
-  const points = [p0];
-  let current = 0;
-  const visited = map.values.map(row => row.map(v => false));
-  while (current < points.length) {
-    // Test current point
-    const [x, y] = points[current];
-    const v = map.get(x, y);
-    // Add all unvisited higher non-9 neighbors to the list
-    const nbs = map.getNeighbors(x, y).filter(nb => {
-      if (map.get(nb[0], nb[1]) < 9 && map.get(nb[0], nb[1]) > v && !visited[nb[1]][nb[0]]) {
-        visited[nb[1]][nb[0]] = true;
-        return true;
-      }
-      return false;
-    });
-    points.push(...nbs);
-    // Proceed to next point
-    current++;
-  }
-  return points.length;
+  let count = 0;
+  floodFill(
+    p0, // start point
+    (p) => map.getNeighbors(p[0], p[1]).filter((nb) => {
+      return map.get(nb[0], nb[1]) < 9 && map.get(nb[0], nb[1]) > map.get(p[0], p[1])
+    }), // get all higher neighbors
+    (el) => { count++; }, // count every traversed coordinate
+    (p) => `${p[0]},${p[1]}` // deterministic IDs per coordinate required for visited map  
+  );
+  return count;
 }
 
 const map = setupMap(data1);
