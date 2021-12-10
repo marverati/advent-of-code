@@ -1,7 +1,7 @@
 
 const data0 = ``;
 
-const data1 = require('./00data');
+const { data1 } = require('./00data');
 
 function prepareData(data) {
   return data.split("\n");

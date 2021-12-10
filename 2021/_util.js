@@ -175,11 +175,21 @@ function getMean(numbers) {
     return numbers.reduce((a, b) => a + b, 0) / numbers.length;
 }
 
+function getMin(numbers) {
+    return numbers.reduce((a, b) => a < b ? a : b, Infinity);
+}
+
+function getMax(numbers) {
+    return numbers.reduce((a, b) => a > b ? a : b, -Infinity);
+}
+
 module.exports = {
     dfs,
     bfs,
     floodFill,
     create2DArray,
     getMedian,
-    getMean
+    getMean,
+    getMin,
+    getMax
 };
