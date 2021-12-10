@@ -160,9 +160,26 @@ function create2DArray(wOrFunction, h, valueOrGenerator) {
     return map;
 }
 
+function getMedian(numbers) {
+    const list = numbers.slice();
+    list.sort((a, b) => a - b);
+    const mid = (list.length - 1) / 2;
+    if (mid === Math.floor(mid)) {
+        return list[mid];
+    } else {
+        return (list[Math.floor(mid)] + list[Math.ceil(mid)]) / 2;
+    }
+}
+
+function getMean(numbers) {
+    return numbers.reduce((a, b) => a + b, 0) / numbers.length;
+}
+
 module.exports = {
     dfs,
     bfs,
     floodFill,
-    create2DArray
+    create2DArray,
+    getMedian,
+    getMean
 };
