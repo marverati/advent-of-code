@@ -155,6 +155,15 @@ function centerString(s, chars) {
     return s;
 }
 
+function absMod(v, div) {
+    return (v > 0) ? (v % div) : ((v % div) + div);
+}
+
+function angleDiff(a1, a2) {
+    const diff = absMod(a2 - a1, 2 * Math.PI);
+    return diff > Math.PI ? diff - 2 * Math.PI : diff;
+}
+
 module.exports = {
     dfs,
     bfs,
@@ -163,5 +172,7 @@ module.exports = {
     getMean,
     getMin,
     getMax,
-    centerString
+    centerString,
+    absMod,
+    angleDiff
 };
