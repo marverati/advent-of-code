@@ -1,10 +1,10 @@
 
 const data0 = ``;
 
-const { data1 } = require('./00data');
+const { data1 } = require('./12data');
 
 function prepareData(data) {
-    return data.split("\n").map(line => line.trim()).filter(line => line !== "");
+  return data.split("\n").map(line => line.trim()).filter(line => line !== "");
 }
 
 function part1(data) {

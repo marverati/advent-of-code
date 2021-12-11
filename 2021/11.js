@@ -1,4 +1,4 @@
-const { create2DArray } = require("./_util");
+const Array2D = require("./dataStructures/Array2D");
 
 // Test input
 const data0 = `5483143223
@@ -26,7 +26,7 @@ const data1 = `5665114554
 
 function prepareData(data) {
   const lines = data.split("\n");
-  const map = create2DArray(10, 10, (x, y) => ({
+  const map = new Array2D(10, 10, (x, y) => ({
     energy: +lines[y][x],
     flashed: false
   }));
