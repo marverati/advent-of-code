@@ -132,7 +132,7 @@ function create2DArray(wOrFunction, h, valueOrGenerator) {
         map[y] = [];
         const w = wOrFunction instanceof Function ? wOrFunction(y) : wOrFunction;
         for (let x = 0; x < w; x++) {
-            map[y][x] = generator();
+            map[y][x] = generator(x, y);
         }
     }
     map.forEachCell = (handler) => {
@@ -148,6 +148,8 @@ function create2DArray(wOrFunction, h, valueOrGenerator) {
             handler(map[y], y);
         }
     };
+    map.h = map.length;
+    map.w = map[0].length;
     map.isInside = (x, y) => x === (x << 0) && y === (y << 0) && x >= 0 && y >= 0 && y < map.h && x < map[y].length;
     map.get = (x, y) => map.isInside(x, y) ? map[y][x] : null;
     map.set = (x, y, v) => {
@@ -156,7 +158,23 @@ function create2DArray(wOrFunction, h, valueOrGenerator) {
         } else {
             throw new Error("Setting illegal map position: " + x + "," + y);
         }
+    };
+    map.directNeighborOffsets = [ [0, -1], [1, 0], [0, 1], [-1, 0] ];
+    map.allNeighborOffsets = [ [0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1] ];
+    map.forNeighborOffsets = (x, y, offsets, handler) => {
+        for (const off of offsets) {
+            const cx = x + off[0], cy = y + off[1];
+            if (map.isInside(cx, cy)) {
+                handler(map.get(cx, cy), cx, cy);
+            }
+        }
     }
+    map.forDirectNeighbors = (x, y, handler) => {
+        map.forNeighborOffsets(x, y, map.directNeighborOffsets, handler);
+    };
+    map.forAllNeighbors = (x, y, handler) => {
+        map.forNeighborOffsets(x, y, map.allNeighborOffsets, handler);
+    };
     return map;
 }
 

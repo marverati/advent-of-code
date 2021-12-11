@@ -1,4 +1,6 @@
+const { create2DArray } = require("./_util");
 
+// Test input
 const data0 = `5483143223
 2745854711
 5264556173
@@ -10,6 +12,7 @@ const data0 = `5483143223
 4846848554
 5283751526`;
 
+// Actual input
 const data1 = `5665114554
 4882665427
 6185582113
@@ -23,16 +26,10 @@ const data1 = `5665114554
 
 function prepareData(data) {
   const lines = data.split("\n");
-  const map = [];
-  for (let y = 0; y < lines.length; y++) {
-    map[y] = [];
-    for (let x = 0; x < lines[0].length; x++) {
-      map[y][x] = {
-        energy: +lines[y][x],
-        flashed: false
-      };
-    }
-  }
+  const map = create2DArray(10, 10, (x, y) => ({
+    energy: +lines[y][x],
+    flashed: false
+  }));
   return map;
 }
 
@@ -58,59 +55,42 @@ function part2(map, maxSteps = 1000000) {
 function runStep(map) {
   let flashes = 0;
   // Increase energy
-  for (let y = 0; y < map.length; y++) {
-    const row = map[y];
-    for (let x = 0; x < row.length; x++) {
-      row[x].energy++;
-    }
-  }
+  map.forEachCell(cell => cell.energy++);
   // Cascading flashes
-  for (let y = 0; y < map.length; y++) {
-    const row = map[y];
-    for (let x = 0; x < row.length; x++) {
-      if (row[x].energy > 9 && !row[x].flashed) {
-        flashes += flash(map, x, y);
-      }
+  map.forEachCell((cell, x, y) => {
+    if (cell.energy > 9 && !cell.flashed) {
+      flashes += flash(map, x, y);
     }
-  }
+  });
   // Reset energy
-  for (let y = 0; y < map.length; y++) {
-    const row = map[y];
-    for (let x = 0; x < row.length; x++) {
-      if (row[x].flashed) {
-        row[x].energy = 0;
-        row[x].flashed = false;
-      }
+  map.forEachCell((cell) => {
+    if (cell.flashed) {
+      cell.flashed = false;
+      cell.energy = 0;
     }
-  }
+  });
   return flashes;
 }
 
 function flash(map, x, y) {
   let count = 1;
-  map[y][x].flashed = true;
+  map.get(x, y).flashed = true;
   // Raise neighbors
-  for (let cy = y - 1; cy <= y + 1; cy++) {
-    for (let cx = x - 1; cx <= x + 1; cx++) {
-      if (map[cy] && map[cy][cx] && (cx !== x || cy !== y)) {
-        count += raise(map, cx, cy);
-      }
-    }
-  }
+  map.forAllNeighbors(x, y, (_cell, cx, cy) => {
+    count += raise(map, cx, cy);
+  });
   return count;
 }
 
 function raise(map, x, y) {
   let count = 0;
-  map[y][x].energy++;
-  if (map[y][x].energy > 9 && !map[y][x].flashed) {
+  const cell = map.get(x, y);
+  cell.energy++;
+  if (cell.energy > 9 && !cell.flashed) {
     count += flash(map, x, y);
   }
   return count;
 }
 
-
-let map = prepareData(data1);
-console.log("Part 1: ", part1(map));
-map = prepareData(data1);
-console.log("Part 2: ", part2(map));
+console.log("Part 1: ", part1(prepareData(data1)));
+console.log("Part 2: ", part2(prepareData(data1)));
