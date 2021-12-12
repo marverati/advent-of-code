@@ -1,3 +1,10 @@
+const data0 = `start-A
+start-b
+A-c
+A-b
+b-d
+A-end
+b-end`;
 
 const data1 = `kc-qy
 qy-FN
@@ -24,14 +31,6 @@ wx-start
 end-nv
 kc-nv
 nv-XQ`;
-
-const data0 = `start-A
-start-b
-A-c
-A-b
-b-d
-A-end
-b-end`;
 
 function prepareData(data) {
   const lines = data.split("\n").map(line => line.trim()).filter(line => line !== "");
