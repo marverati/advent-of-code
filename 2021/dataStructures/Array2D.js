@@ -94,7 +94,7 @@ class Array2D extends Array {
         return new Array2D((y) => this[y].length, this.h, (x, y) => this[y][x]);
     }
 
-    countCells(testFunc) {
+    countCells(testFunc = c => !!c) {
         return this.reduceCells((v, cell) => v + (testFunc(cell) ? 1 : 0), 0);
     }
 
