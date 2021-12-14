@@ -17,14 +17,11 @@ function part1({template, rules}, steps = 10) {
     for (const rule of rules) {
         els[rule.to] = true;
     }
-    const elKeys = Object.keys(els);
     const elements = Object.keys(els).map(key => ({
         el: key,
         count: countChars(template, key)
     }));
     for (let i = 0; i < steps; i++) {
-        for (const el of elements) { el.count = countChars(template, el.el); }
-        const sorted = elements.slice().sort((a, b) => a.count - b.count);
         template = performStep1(template, rules);
     }
     for (const el of elements) { el.count = countChars(template, el.el); }
