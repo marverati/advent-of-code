@@ -164,6 +164,13 @@ function angleDiff(a1, a2) {
     return diff > Math.PI ? diff - 2 * Math.PI : diff;
 }
 
+function padStart(s, char, len) {
+    while (s.length < len) {
+        s = char + s;
+    }
+    return s;
+}
+
 module.exports = {
     dfs,
     bfs,
@@ -174,5 +181,6 @@ module.exports = {
     getMax,
     centerString,
     absMod,
-    angleDiff
+    angleDiff,
+    padStart
 };

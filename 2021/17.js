@@ -1,7 +1,7 @@
 
 const data0 = ``;
 
-const { data1 } = require('./00data');
+const { data1 } = require('./17data');
 
 function prepareData(data) {
     const lines = data.split("\n").map(line => line.trim()).filter(line => line !== "");
