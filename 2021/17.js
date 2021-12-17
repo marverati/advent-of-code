@@ -16,7 +16,7 @@ class Probe {
     }
 
     reaches(trg) {
-        while (true) {
+        while (this.y >= trg.y1) {
             // Target reached
             if (this.isWithin(trg)) {
                 return true;
@@ -27,13 +27,9 @@ class Probe {
                     return false;
                 }
             }
-            // Passed it already
-            if (this.y < trg.y1) {
-                return false;
-            }
-
             this.proceed();
         }
+        return false;
     }
 
     isWithin(trg) {
