@@ -171,6 +171,14 @@ function padStart(s, char, len) {
     return s;
 }
 
+function range(min, maxExclusive) {
+    const result = [];
+    for (let i = min; i < maxExclusive; i++) {
+        result.push(i);
+    }
+    return result;
+}
+
 module.exports = {
     dfs,
     bfs,
@@ -182,5 +190,6 @@ module.exports = {
     centerString,
     absMod,
     angleDiff,
-    padStart
+    padStart,
+    range
 };
