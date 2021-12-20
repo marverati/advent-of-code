@@ -48,8 +48,8 @@ class Array2D extends Array {
         return x === (x << 0) && y === (y << 0) && x >= 0 && y >= 0 && y < this.h && x < this[y].length;
     }
 
-    get(x, y) {
-        return this.isInside(x, y) ? this[y][x] : null;
+    get(x, y, defaultValue = null) {
+        return this.isInside(x, y) ? this[y][x] : defaultValue;
     }
 
     set(x, y, v) {
