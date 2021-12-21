@@ -1,6 +1,6 @@
 
 function part1(p1, p2) {
-    const pos = [p1, p2], points = [0, 0], max = 1000;
+    const pos = [p1 - 1, p2 - 1], points = [0, 0], max = 1000;
     let turn = 0;
     while (Math.max(...points) < max) {
         takeTurn(pos, points, turn);
@@ -11,13 +11,13 @@ function part1(p1, p2) {
 
 function takeTurn(pos, points, turn) {
     const move = rollDie() + rollDie() + rollDie();
-    pos[turn] = ((pos[turn] + move - 1) % 10) + 1;
-    points[turn] += pos[turn];
+    pos[turn] = (pos[turn] + move) % 10;
+    points[turn] += pos[turn] + 1;
 }
 
 let dieRolls = 0;
 function rollDie() {
-    return (1 + (dieRolls++ % 100));
+    return (dieRolls++ % 100) + 1;
 }
 
 function part2(p1, p2) {
@@ -26,31 +26,29 @@ function part2(p1, p2) {
     const counts = [1, 3, 6, 7, 6, 3, 1]; // how many of the 3³ = 27 universes end up with that sum
     let p1wins = 0, total = 0;
 
-    recurse(0, p1, p2, 0, 0, 1);
+    recurse(0, p1 - 1, p2 - 1, 0, 0, 1);
 
     return Math.max(p1wins, total - p1wins);
 
     function recurse(turn, pos1, pos2, points1, points2, universesInThisState) {
         // Game won by a player?
         if (points1 >= max || points2 >= max) {
-            p1wins += (points1 > points2) ? universesInThisState : 0;
             total += universesInThisState;
+            (points1 > points2) && (p1wins += universesInThisState);
             return;
         }
         // Continue with next move
         if (turn === 0) {
             // First player
             for (let i = 0; i < rolls.length; i++) {
-                const move = rolls[i], universes = universesInThisState * counts[i];
-                const nxt = ((pos1 + move - 1) % 10) + 1;
-                recurse(1, nxt, pos2, points1 + nxt, points2, universes);
+                const nxt = (pos1 + rolls[i]) % 10, universes = universesInThisState * counts[i];
+                recurse(1, nxt, pos2, points1 + nxt + 1, points2, universes);
             }
         } else {
             // Second player
             for (let i = 0; i < rolls.length; i++) {
-                const move = rolls[i], universes = universesInThisState * counts[i];
-                const nxt = ((pos2 + move - 1) % 10) + 1;
-                recurse(0, pos1, nxt, points1, points2 + nxt, universes);
+                const nxt = (pos2 + rolls[i]) % 10, universes = universesInThisState * counts[i];
+                recurse(0, pos1, nxt, points1, points2 + nxt + 1, universes);
             }
         }
     }
