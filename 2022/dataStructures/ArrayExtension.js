@@ -6,9 +6,7 @@ Array.prototype.sortAsc = function() { return this.sort((a, b) => a > b ? -1 : a
 Array.prototype.sortDesc = function() { return this.sort((a, b) => a > b ? 1 : a < b ? -1 : 0); }
 
 Array.prototype.at = function(index) {
-    console.log(index);
     index = absMod(index, this.length);
-    console.log(index, this.length);
     return this[index];
 }
 
