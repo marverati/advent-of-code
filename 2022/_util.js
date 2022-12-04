@@ -179,6 +179,51 @@ function range(min, maxExclusive) {
     return result;
 }
 
+function getOverlap(from1, to1, from2, to2) {
+    if (to1 < from1) { const tmp = to1; to1 = from1; from1 = tmp; }
+    if (to2 < from2) { const tmp = to2; to2 = from2; from2 = tmp; }
+    const from = Math.max(from1, from2);
+    const to = Math.min(to1, to2);
+    if (from <= to) {
+        return [from, to];
+    }
+    return null;
+}
+
+function overlaps(from1, to1, from2, to2) {
+    if (to1 < from1) { const tmp = to1; to1 = from1; from1 = tmp; }
+    if (to2 < from2) { const tmp = to2; to2 = from2; from2 = tmp; }
+    return !(to1 < from2 || from1 > to2);
+}
+
+function fullyContains(from1, to1, from2, to2, checkBothDirections = false) {
+    if (to1 < from1) { const tmp = to1; to1 = from1; from1 = tmp; }
+    if (to2 < from2) { const tmp = to2; to2 = from2; from2 = tmp; }
+    if (from1 <= from2 && to1 >= to2) {
+        return true;
+    }
+    if (checkBothDirections) {
+        return fullyContains(from2, to2, from1, to1, false);
+    }
+    return false;
+}
+
+function cutString(s, atPos) {
+    return [
+        s.substring(0, atPos),
+        s.substring(atPos)
+    ];
+}
+
+function cutStringMultiple(s, charLength) {
+    if (charLength < 1) { throw new Error('invalid character length for splitting string: ' + charLength); }
+    const result = [];
+    for (let i = 0; i < s.length; i += charLength) {
+        result.push(s.substring(i, i + charLength));
+    }
+    return result;
+}
+
 module.exports = {
     dfs,
     bfs,
@@ -191,5 +236,10 @@ module.exports = {
     absMod,
     angleDiff,
     padStart,
-    range
+    range,
+    getOverlap,
+    overlaps,
+    fullyContains,
+    cutString,
+    cutStringMultiple,
 };

@@ -1,5 +1,6 @@
 require('./_helpers.js');
 const { data1 } = require('./03data');
+const { cutString } = require('./_util.js');
 
 const data0 = `vJrwpWtwJgWrhcsFMMfFFhFp
 jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
@@ -19,9 +20,7 @@ function prepareData(data) {
 function part1(data) {
     let result = 0;
     for (const line of data) {
-        const mid = line.length / 2;
-        const p1 = line.substring(0, mid);
-        const p2 = line.substring(mid);
+        const [p1, p2] = cutString(line, line.length / 2);
         // find common letter
         for (const c of p1) {
             if (p2.indexOf(c) >= 0) {
