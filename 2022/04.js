@@ -19,11 +19,11 @@ function prepareData(data) {
 }
 
 function part1(data) {
-    return data.filter(line => fullyContains(line[0][0], line[0][1], line[1][0], line[1][1], true)).length
+    return data.count(line => fullyContains(line[0][0], line[0][1], line[1][0], line[1][1], true))
 }
 
 function part2(data) {
-    return data.filter(line => overlaps(line[0][0], line[0][1], line[1][0], line[1][1])).length
+    return data.count(line => overlaps(line[0][0], line[0][1], line[1][0], line[1][1]))
 }
 
 

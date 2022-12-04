@@ -1,5 +1,10 @@
 const { absMod } = require("../_util");
 
+Array.prototype.count = function(filter = () => true) {
+    let count = 0;
+    this.forEach(v => { if (filter(v)) { count++; } });
+    return count;
+}
 
 Array.prototype.sortAsc = function() { return this.sort((a, b) => a > b ? -1 : a < b ? 1 : 0); }
 
