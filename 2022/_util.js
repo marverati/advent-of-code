@@ -224,6 +224,23 @@ function cutStringMultiple(s, charLength) {
     return result;
 }
 
+function deepCopy(obj) {
+    if (obj instanceof Array) {
+        // array
+        return obj.map(v => deepCopy(v));
+    } else if (obj instanceof Object) {
+        // object
+        const result = {};
+        for (const key of Object.keys(obj)) {
+            result[key] = deepCopy(obj[key]);
+        }
+        return result;
+    } else {
+        // primitive data type
+        return obj;
+    }
+}
+
 module.exports = {
     dfs,
     bfs,
@@ -242,4 +259,5 @@ module.exports = {
     fullyContains,
     cutString,
     cutStringMultiple,
+    deepCopy,
 };

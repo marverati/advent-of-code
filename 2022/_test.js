@@ -1,4 +1,4 @@
-const { cutString, cutStringMultiple, getOverlap } = require("./_util");
+const { cutString, cutStringMultiple, getOverlap, deepCopy } = require("./_util");
 
 const tests = {
     'cutString': () => {
@@ -27,7 +27,41 @@ const tests = {
         expectArray(getOverlap(100, 0, 42, 23), [23, 42], "inverse 1 contains inverse 2");
         expectArray(getOverlap(100, 0, 60, 250), [60, 100], "inverse forward overlap");
         expectArray(getOverlap(100, 0, 250, 60), [60, 100], "double inverse forward overlap");
-    }
+    },
+    'deepCopy': () => {
+        // Primitives
+        expect(deepCopy(null), null);
+        expect(deepCopy(undefined), undefined);
+        expect(deepCopy(3), 3);
+        expect(deepCopy(0), 0);
+        expect(deepCopy(-42), -42);
+        expect(deepCopy(Infinity), Infinity);
+        expect(deepCopy(''), '');
+        expect(deepCopy('Hello World'), 'Hello World');
+        expect(deepCopy('\n'), '\n');
+        expect(deepCopy(false), false);
+        expect(deepCopy(true), true);
+        // Arrays
+        expectObject(deepCopy([]), []);
+        expectObject(deepCopy([null]), [null]);
+        expectObject(deepCopy([1, 2, 3, 5]), [1, 2, 3, 5]);
+        expectObject(deepCopy([null, 42, undefined, 'hello']), [null, 42, undefined, 'hello']);
+        expectObject(deepCopy(
+            [[3], '', [[2], 4, [5, [6]]]]),
+            [[3], '', [[2], 4, [5, [6]]]]
+        );
+        expectObject(deepCopy(
+            [42, { key: 'value', other: -5, more: null, list: [1, 2, {obj: 1337}]}]),
+            [42, { key: 'value', other: -5, more: null, list: [1, 2, {obj: 1337}]}]
+        );
+        // Objects
+        expectObject(deepCopy({}), {});
+        expectObject(deepCopy({a: null}), {a: null});
+        expectObject(deepCopy({test: 42, more: 1337}), {test: 42, more: 1337});
+        expectObject(deepCopy({list: [1, 2], obj: { test: 42}}), {list: [1, 2], obj: { test: 42}});
+        expectObject(deepCopy({list: [[0, [42, 1, 2, [3, 4, [[5]]]]]]}), {list: [[0, [42, 1, 2, [3, 4, [[5]]]]]]});
+        expectObject(deepCopy({obj: {obj: {obj: 42}}}), {obj: {obj: {obj: 42}}});
+    },
 }
 
 function testAll() {
@@ -56,24 +90,71 @@ function expect(actualValue, expectedValue, name = "") {
 }
 
 function expectArray(actualValue, expectedValue, name = "") {
+    if (!isArrayEqual(actualValue, expectedValue)) {
+        expect(actualValue, expectedValue, name); // will throw
+    }
+}
+
+function isArrayEqual(array1, array2) {
     let isEqual = true;
-    if (actualValue === expectedValue) {
+    if (array1 === array2) {
         return true;
     }
-    if ((actualValue == null) !== (expectedValue == null)) {
+    if ((array1 == null) !== (array2 == null)) {
         isEqual = false;
-    } else if (actualValue && expectedValue && actualValue.length !== expectedValue.length) {
+    } else if (array1 && array2 && array1.length !== array2.length) {
         isEqual = false;
     } else {
-        for (let i = 0; i < actualValue.length; i++) {
-            if (actualValue[i] !== expectedValue[i]) {
+        // compare values
+        for (let i = 0; i < array1.length; i++) {
+            if (!isObjectEqual(array1[i], array2[i])) {
                 isEqual = false;
+                break;
             }
         }
     }
-    if (!isEqual) {
+    return isEqual;
+}
+
+function expectObject(actualValue, expectedValue, name = "") {
+    if (!isObjectEqual(actualValue, expectedValue)) {
         expect(actualValue, expectedValue, name); // will throw
     }
+
+}
+
+function isObjectEqual(object1, object2) {
+    let isEqual = true;
+    if (object1 === object2) {
+        return true;
+    }
+    if ((object1 == null) !== (object2 == null)) {
+        isEqual = false;
+    } else {
+        if (object1 instanceof Array && object2 instanceof Array) {
+            // Array
+            return isArrayEqual(object1, object2);
+        } else if (object1 instanceof Object && object2 instanceof Object) {
+            // Object
+            const keys1 = Object.keys(object1);
+            const keys2 = Object.keys(object2);
+            if (isArrayEqual(keys1, keys2)) {
+                // go through keys one by one
+                for (const key of Object.keys(object1)) {
+                    if (!isObjectEqual(object1[key], object2[key])) {
+                        isEqual = false;
+                        break;
+                    }
+                }
+            } else {
+                isEqual = false;
+            }
+        } else {
+            // primitive data type, and no early exit before -> must differ
+            isEqual = false;
+        }
+    }
+    return isEqual;
 }
 
 function shortenString(s) {
