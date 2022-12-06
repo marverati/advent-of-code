@@ -125,6 +125,8 @@ function floodFill(startElement, getNeighborsFn, handleElement, elToReference = 
     );
 }
 
+// *** NUMBERS ***
+
 function getMedian(numbers) {
     const list = numbers.slice();
     list.sort((a, b) => a - b);
@@ -148,13 +150,6 @@ function getMax(numbers) {
     return numbers.reduce((a, b) => a > b ? a : b, -Infinity);
 }
 
-function centerString(s, chars) {
-    const left = Math.floor(chars / 2);
-    const right = chars - left;
-    s = ' '.repeat(left) + s + ' '.repeat(right);
-    return s;
-}
-
 function absMod(v, div) {
     return (v >= 0) ? (v % div) : ((v % div) + div);
 }
@@ -162,21 +157,6 @@ function absMod(v, div) {
 function angleDiff(a1, a2) {
     const diff = absMod(a2 - a1, 2 * Math.PI);
     return diff > Math.PI ? diff - 2 * Math.PI : diff;
-}
-
-function padStart(s, char, len) {
-    while (s.length < len) {
-        s = char + s;
-    }
-    return s;
-}
-
-function range(min, maxExclusive) {
-    const result = [];
-    for (let i = min; i < maxExclusive; i++) {
-        result.push(i);
-    }
-    return result;
 }
 
 function getOverlap(from1, to1, from2, to2) {
@@ -208,6 +188,22 @@ function fullyContains(from1, to1, from2, to2, checkBothDirections = false) {
     return false;
 }
 
+// *** STRINGS ***
+
+function centerString(s, chars) {
+    const left = Math.floor(chars / 2);
+    const right = chars - left;
+    s = ' '.repeat(left) + s + ' '.repeat(right);
+    return s;
+}
+
+function padStart(s, char, len) {
+    while (s.length < len) {
+        s = char + s;
+    }
+    return s;
+}
+
 function cutString(s, atPos) {
     return [
         s.substring(0, atPos),
@@ -220,6 +216,16 @@ function cutStringMultiple(s, charLength) {
     const result = [];
     for (let i = 0; i < s.length; i += charLength) {
         result.push(s.substring(i, i + charLength));
+    }
+    return result;
+}
+
+// *** MISC ***
+
+function range(min, maxExclusive) {
+    const result = [];
+    for (let i = min; i < maxExclusive; i++) {
+        result.push(i);
     }
     return result;
 }

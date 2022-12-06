@@ -1,4 +1,6 @@
 const { cutString, cutStringMultiple, getOverlap, deepCopy } = require("./_util");
+require("./dataStructures/ArrayExtension");
+require("./dataStructures/StringExtension");
 
 const tests = {
     'cutString': () => {
@@ -61,6 +63,34 @@ const tests = {
         expectObject(deepCopy({list: [1, 2], obj: { test: 42}}), {list: [1, 2], obj: { test: 42}});
         expectObject(deepCopy({list: [[0, [42, 1, 2, [3, 4, [[5]]]]]]}), {list: [[0, [42, 1, 2, [3, 4, [[5]]]]]]});
         expectObject(deepCopy({obj: {obj: {obj: 42}}}), {obj: {obj: {obj: 42}}});
+    },
+    'Array.create': () => {
+        // Fixed default value
+        expectArray(Array.create(0, 42), [], "empty");
+        expectArray(Array.create(1, 42), [42]);
+        expectArray(Array.create(2, 42), [42, 42]);
+        expectArray(Array.create(7, 42), [42, 42, 42, 42, 42, 42, 42]);
+        expectArray(Array.create(4), [null, null, null, null]);
+        expect(Array.create(159).length, 159);
+        expect(Array.create(159, 0).length, 159);
+        expect(Array.create(159, "test").length, 159);
+        expect(Array.create(159, [42]).length, 159);
+        // Generator functions
+        expectArray(Array.create(4, (i) => i), [0, 1, 2, 3]);
+        expectArray(Array.create(6, (i) => 2), [2, 2, 2, 2, 2, 2]);
+        expectArray(Array.create(0, (i) => i ** i), []);
+        expectArray(Array.create(4, (i) => i ** i), [1, 1, 4, 27]);
+        expectArray(Array.create(4, (i) => i % 2 ? 1 : '0'), ['0', 1, '0', 1]);
+    },
+    'String.prototype.sort': () => {
+        expect("test".sort(), "estt");
+        expect("aAbBcC".sort(), "ABCabc");
+        expect("this is a test".sort(), "   aehiisssttt");
+    },
+    'String.prototype.getCharSet': () => {
+        expectArray(Array.from("".getCharSet()), []);
+        expectArray(Array.from("test".getCharSet()), ["t", "e", "s"]);
+        expectArray(Array.from("aAbB".getCharSet()), ["a", "A", "b", "B"]);
     },
 }
 

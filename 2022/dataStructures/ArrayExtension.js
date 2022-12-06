@@ -1,5 +1,23 @@
 const { absMod } = require("../_util");
 
+Array.create = function(length = 0, defaultElementOrGenerator = null) {
+    const array = new Array(length);
+    if (defaultElementOrGenerator instanceof Function) {
+        // Generator function
+        const generator = defaultElementOrGenerator;
+        for (let i = 0; i < length; i++) {
+            array[i] = generator(i);
+        }
+    } else {
+        // Simple default element
+        const defaultElement = defaultElementOrGenerator;
+        for (let i = 0; i < length; i++) {
+            array[i] = defaultElement;
+        }
+    }
+    return array;
+}
+
 Array.prototype.count = function(filter = () => true) {
     let count = 0;
     this.forEach(v => { if (filter(v)) { count++; } });
