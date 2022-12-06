@@ -3,7 +3,7 @@ require('./_helpers.js');
 const { data1 } = require('./06data');
 
 function findUniqueSequence(s, seqLength) {
-    const allCharsUnique = (chars) => chars.length === chars.getCharSet().size;
+    const allCharsUnique = (chars) => chars.length === new Set(chars.split("")).size;
     return s.find((i) => allCharsUnique(s.substr(i, seqLength))) + seqLength;
 }
 
