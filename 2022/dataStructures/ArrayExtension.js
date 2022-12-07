@@ -24,6 +24,18 @@ Array.prototype.count = function(filter = () => true) {
     return count;
 }
 
+Array.prototype.sum = function() {
+    return this.reduce((sum, v) => sum + v, 0);
+}
+
+Array.prototype.max = function() {
+    return Math.max(... this);
+}
+
+Array.prototype.min = function() {
+    return Math.min(... this);
+}
+
 Array.prototype.sortAsc = function() { return this.sort((a, b) => a > b ? -1 : a < b ? 1 : 0); }
 
 Array.prototype.sortDesc = function() { return this.sort((a, b) => a > b ? 1 : a < b ? -1 : 0); }
