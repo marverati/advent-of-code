@@ -28,6 +28,10 @@ Array.prototype.sum = function() {
     return this.reduce((sum, v) => sum + v, 0);
 }
 
+Array.prototype.product = function() {
+    return this.reduce((product, v) => product * v, 1);
+}
+
 Array.prototype.max = function() {
     return Math.max(... this);
 }

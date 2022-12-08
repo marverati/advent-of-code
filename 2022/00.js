@@ -1,5 +1,6 @@
 require('./_helpers.js');
 const { data1 } = require('./00data');
+const Array2D = require('./dataStructures/Array2D.js');
 
 const data0 = ``;
 
@@ -23,6 +24,6 @@ function part2(data) {
 
 
 const data = prepareData(data0);
-console.log(data);
+(data.length < 50) && console.log(data);
 console.log("Part 1: ", part1(data));
 console.log("Part 2: ", part2(data));

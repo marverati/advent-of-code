@@ -95,13 +95,13 @@ class Array2D extends Array {
     }
 
     countCells(testFunc = c => !!c) {
-        return this.reduceCells((v, cell) => v + (testFunc(cell) ? 1 : 0), 0);
+        return this.reduceCells((v, cell, x, y) => v + (testFunc(cell, x, y) ? 1 : 0), 0);
     }
 
     reduceCells(reducer, initial) {
         let current = initial;
-        this.forEachCell(cell => {
-            current = reducer(current, cell);
+        this.forEachCell((cell, x, y) => {
+            current = reducer(current, cell, x, y);
         });
         return current;
     }

@@ -1,4 +1,5 @@
 
 module.exports = {
-    data1: ``
+data0: ``,
+data1: ``
 };
