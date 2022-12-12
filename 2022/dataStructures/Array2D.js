@@ -60,6 +60,17 @@ class Array2D extends Array {
         }
     }
 
+    find(filter) {
+        for (let y = 0; y < this.h; y++) {
+            for (let x = 0; x < this.w; x++) {
+                if (filter(this[y][x], x, y)) {
+                    return {x, y}
+                }
+            }
+        }
+        return null;
+    }
+
     forNeighborOffsets(x, y, offsets, handler) {
         for (const off of offsets) {
             const cx = x + off[0], cy = y + off[1];
