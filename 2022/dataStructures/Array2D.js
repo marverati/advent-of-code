@@ -97,8 +97,8 @@ class Array2D extends Array {
         return s;
     }
 
-    slice() {
-        return this.clone();
+    slice(x0 = 0, y0 = 0, w = this.w - x0, h = this.h - y0) {
+        return new Array2D(w, h, (x, y) => this[y0 + y][x0 + x]);
     }
 
     clone() {
