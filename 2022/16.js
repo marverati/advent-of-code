@@ -77,9 +77,55 @@ function part2(map) {
 let highestTimeLogged = 0;
 const timesSolved = {};
 
+const cellDistances = {};
+// Calculate all distances
+function calcDistances(map) {
+    const cells = Object.keys(map);
+    // Dis to self
+    for (const cell of cells) {
+        const key = cell + "-" + cell;
+        cellDistances[key] = 0;
+    }
+    // Stepwise grow the network
+    for (const step of cells) {
+        for (const cell of cells) {
+            for (const other of cells) {
+                if (getDistance(map, cell, other) == null) {
+                    const key1 = cell + "-" + other;
+                    const key2 = other + "-" + cell;
+                    const bestNb = map[cell].targets.map(t => getDistance(map, t, other)).filter(v => v != null).min();
+                    if (bestNb < Infinity) {
+                        cellDistances[key1] = bestNb + 1;
+                        cellDistances[key2] = bestNb + 1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+function getDistance(map, cell1, cell2) {
+    if (cell1 === cell2) { return 0; }
+    if (map[cell1].targets.includes(cell2)) { return 1; }
+    // if (cell2 < cell1) { const tmp = cell2; cell2 = cell1; cell1 = tmp; }
+    const key = cell1 + "-" + cell2;
+    if (cellDistances[key] != null) {
+        return cellDistances[key];
+    }
+    return null;
+}
+
 function findBestFlow2(map, cell, elCell, prevCell, prevElCell, timeRemaining, storage, openValves) {
     const cells = [cell, elCell].sort((a, b) => a > b ? 1 : -1);
-    const key = cells[0] + ',' + cells[1] + ':' + timeRemaining + '_' + Object.keys(openValves).sort().join(',') // note: maybe problems here with running multiple times through same valve???
+    const keysInReach = Object.keys(openValves).filter(key => getDistance(map, cell, key) < timeRemaining || getDistance(map, elCell, key) < timeRemaining);
+    
+    // If even with more time remaining we didn't find any value, then skip this
+    // for (let t = timeRemaining + 1; t <= highestTimeLogged; t++) {
+    //     const key = cells[0] + ',' + cells[1] + ':' + timeRemaining + '_' + Object.keys(openValves).sort().join(',') // note: maybe problems here with running multiple times through same valve???
+    //     if (storage[key] === 0) { return 0; }
+    // }
+    
+    const key = cells[0] + ',' + cells[1] + ':' + timeRemaining + '_' + keysInReach.sort().join(',') // note: maybe problems here with running multiple times through same valve???
     if (storage[key] != null) {
         return storage[key];
     }
@@ -125,6 +171,7 @@ function findBestFlow2(map, cell, elCell, prevCell, prevElCell, timeRemaining, s
     }
 
     if (!timesSolved[timeRemaining]) {
+        highestTimeLogged = Math.max(highestTimeLogged, timeRemaining);
         timesSolved[timeRemaining] = true;
         console.log('First of level ', timeRemaining, ' solved as ', result, 'from', cell, elCell, prevCell, prevElCell);
     }
@@ -133,7 +180,8 @@ function findBestFlow2(map, cell, elCell, prevCell, prevElCell, timeRemaining, s
 }
 
 
-const data = prepareData(data1);
+const data = prepareData(data0);
+calcDistances(data);
 // console.log(data);
 // console.log("Part 1: ", part1(data));
 console.log("Part 2: ", part2(data));
