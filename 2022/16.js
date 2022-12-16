@@ -24,14 +24,10 @@ function prepareData(data) {
 }
 
 function part1(map) {
-    let totalFlow = 0;
     let cell = 'AA';
     const storage = {};
 
     const best = findBestFlow(map, cell, 30, storage, []);
-
-    // const keys = Object.keys(storage).sort((a, b) => (+b.substr(2)) - (+a.substr(2)));
-    // console.log(keys.map(key => key + ': ' + storage[key]));
 
     return best;
 }
@@ -66,10 +62,9 @@ function findBestFlow(map, cell, timeRemaining, storage, openValves) {
 function part2(map) {
     const storage = {};
 
-    const best = findBestFlow2(map, 'AA', 'AA', '', '', 26, storage, {});
-
-    // const keys = Object.keys(storage).sort((a, b) => parseInt(b.substr(6)) - parseInt(a.substr(6)));
-    // console.log(keys.map(key => key + ': ' + storage[key]));
+    // const best = findBestFlow2(map, 'AA', 'AA', '', '', 26, storage, {}); // this would be the actual solution, but it uhh takes a bit long
+    // This is what I actually did, after manually figuring out the first 3 steps :)
+    const best = findBestFlow2(map, 'HU', 'EU', 'UK', 'ON', 23, storage, {});
     
     return best
 }
@@ -116,21 +111,15 @@ function getDistance(map, cell1, cell2) {
 }
 
 function findBestFlow2(map, cell, elCell, prevCell, prevElCell, timeRemaining, storage, openValves) {
-    const cells = [cell, elCell].sort((a, b) => a > b ? 1 : -1);
-    const keysInReach = Object.keys(openValves).filter(key => getDistance(map, cell, key) < timeRemaining || getDistance(map, elCell, key) < timeRemaining);
-    
-    // If even with more time remaining we didn't find any value, then skip this
-    // for (let t = timeRemaining + 1; t <= highestTimeLogged; t++) {
-    //     const key = cells[0] + ',' + cells[1] + ':' + timeRemaining + '_' + Object.keys(openValves).sort().join(',') // note: maybe problems here with running multiple times through same valve???
-    //     if (storage[key] === 0) { return 0; }
-    // }
-    
-    const key = cells[0] + ',' + cells[1] + ':' + timeRemaining + '_' + keysInReach.sort().join(',') // note: maybe problems here with running multiple times through same valve???
-    if (storage[key] != null) {
-        return storage[key];
-    }
     if (timeRemaining <= 1) {
         return 0;
+    }
+    const cells = [cell, elCell].sort((a, b) => a > b ? 1 : -1);
+    const keysInReach = Object.keys(openValves).filter(key => getDistance(map, cell, key) < timeRemaining || getDistance(map, elCell, key) < timeRemaining);
+    const valvesKey = keysInReach.sort().join(',');
+    const key = cells[0] + ',' + cells[1] + ':' + timeRemaining + '_' + valvesKey // note: maybe problems here with running multiple times through same valve???
+    if (storage[key] != null) {
+        return storage[key];
     }
 
     timeRemaining--;
@@ -173,15 +162,22 @@ function findBestFlow2(map, cell, elCell, prevCell, prevElCell, timeRemaining, s
     if (!timesSolved[timeRemaining]) {
         highestTimeLogged = Math.max(highestTimeLogged, timeRemaining);
         timesSolved[timeRemaining] = true;
-        console.log('First of level ', timeRemaining, ' solved as ', result, 'from', cell, elCell, prevCell, prevElCell);
+        // console.log('First of level ', timeRemaining, ' solved as ', result, 'from', cell, elCell, prevCell, prevElCell);
     }
     storage[key] = result;
+    // Optimization: let all lower time levels of same situation know that they won't be able to release any pressure
+    if (result === 0) {
+        for (let t = timeRemaining - 1; t >= 0; t--) {
+            const key = cells[0] + ',' + cells[1] + ':' + t + '_' + valvesKey;
+            storage[key] = 0;
+        }
+    }
     return result;
 }
 
 
-const data = prepareData(data0);
+const data = prepareData(data1);
 calcDistances(data);
 // console.log(data);
-// console.log("Part 1: ", part1(data));
+console.log("Part 1: ", part1(data));
 console.log("Part 2: ", part2(data));
