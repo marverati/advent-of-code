@@ -1,3 +1,4 @@
+const Array2D = require("./dataStructures/Array2D");
 const { cutString, cutStringMultiple, getOverlap, deepCopy } = require("./_util");
 require("./dataStructures/ArrayExtension");
 require("./dataStructures/StringExtension");
@@ -81,6 +82,21 @@ const tests = {
         expectArray(Array.create(0, (i) => i ** i), []);
         expectArray(Array.create(4, (i) => i ** i), [1, 1, 4, 27]);
         expectArray(Array.create(4, (i) => i % 2 ? 1 : '0'), ['0', 1, '0', 1]);
+    },
+    'Array2D.flip': () => {
+        expectArray(new Array2D(4, 1, (x, y) => x).flip(), [[0, 1, 2, 3]]);
+        expectArray(new Array2D(1, 4, (x, y) => y).flip(), [[3], [2], [1], [0]]);
+        expectArray(new Array2D(2, 2, (x, y) => x + 2 * y).flip(), [[2, 3], [0, 1]]);
+    },
+    'Array2D.mirror': () => {
+        expectArray(new Array2D(4, 1, (x, y) => x).mirror(), [[3, 2, 1, 0]]);
+        expectArray(new Array2D(1, 4, (x, y) => y).mirror(), [[0], [1], [2], [3]]);
+        expectArray(new Array2D(2, 2, (x, y) => x + 2 * y).mirror(), [[1, 0], [3, 2]]);
+    },
+    'Array2D.transpose': () => {
+        expectArray(new Array2D(4, 1, (x, y) => x).transpose(), [[0], [1], [2], [3]]);
+        expectArray(new Array2D(1, 4, (x, y) => y).transpose(), [[0, 1, 2, 3]]);
+        expectArray(new Array2D(2, 2, (x, y) => x + 2 * y).transpose(), [[0, 2], [1, 3]]);
     },
     'String.prototype.sort': () => {
         expect("test".sort(), "estt");

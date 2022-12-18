@@ -15,6 +15,8 @@ class Array2D extends Array {
         this.cellCount = cellCount;
         this.h = h;
         this.w = this[0].length;
+        this.h1 = this.h - 1;
+        this.w1 = this.w - 1;
         this.directNeighborOffsets = [ [0, -1], [1, 0], [0, 1], [-1, 0] ];
         this.allNeighborOffsets = [ [0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1] ];
     }
@@ -103,6 +105,18 @@ class Array2D extends Array {
 
     clone() {
         return new Array2D((y) => this[y].length, this.h, (x, y) => this[y][x]);
+    }
+
+    flip() {
+        return new Array2D((y) => this[this.h1 - y].length, this.h, (x, y) => this[this.h1 - y][x]);
+    }
+
+    mirror() {
+        return new Array2D((y) => this[y].length, this.h, (x, y) => this[y][this.w1 - x]);
+    }
+    
+    transpose() {
+        return new Array2D(this.h, this.w, (x, y) => this[x][y]);
     }
 
     countCells(testFunc = c => !!c) {
