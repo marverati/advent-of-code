@@ -1,25 +1,6 @@
 require('./_helpers.js');
 const { data1 } = require('./21data');
-const Array2D = require('./dataStructures/Array2D.js');
 const { deepCopy } = require('./_util.js');
-
-const data0 = `root: pppw + sjmn
-dbpl: 5
-cczh: sllz + lgvd
-zczc: 2
-ptdq: humn - dvpt
-dvpt: 3
-lfqf: 4
-humn: 5
-ljgn: 2
-sjmn: drzm * dbpl
-sllz: 4
-pppw: cczh / lfqf
-lgvd: ljgn * ptdq
-drzm: hmdt - zczc
-hmdt: 32`;
-
-// tdwj: wfgq - tttc
 
 function prepareData(data) {
     const lines = data
@@ -130,6 +111,5 @@ function evaluateMonkey(monkeys, name) {
 }
 
 const data = prepareData(data1);
-// (data.length < 50) && console.log(data);
 console.log("Part 1: ", part1(deepCopy(data)));
 console.log("Part 2: ", part2(data));
