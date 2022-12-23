@@ -8,18 +8,23 @@ function prepareData(data) {
         .map(line => line.trim()) // trim white space
         .filter(line => line !== "") // remove empty lines
     const elves = [];
-    const padding = 500; // we need to make map bigger than initial size, since elves move in all directions away from center
-    const map = new Array2D(lines[0].length + 2 * padding, lines.length + 2 * padding, (x, y) => null);
+    const map = {};
     for (let y = 0; y < lines.length; y++) {
         for (let x = 0; x < lines[y].length; x++) {
             if (lines[y][x] === '#') {
-                elves.push({x: x + padding , y: y + padding});
-                map[y + padding][x + padding] = elves.last;
+                elves.push({x: x , y: y});
+                map[getKey(x, y)] = elves.last;
             }
         }
     }
     return { map, elves };
 }
+
+function getKey(x, y) {
+    return `${x},${y}`;
+}
+
+const allNeighborOffsets = [ [0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1] ];
 
 function simulate({ map, elves }, rounds) {
     const dirs = [
@@ -51,10 +56,10 @@ function simulate({ map, elves }, rounds) {
         let moves = 0;
         for (const e of elves) {
             if (e.target) {
-                map[e.y][e.x] = null;
+                map[getKey(e.x, e.y)] = null;
                 e.x = e.target.x;
                 e.y = e.target.y;
-                map[e.y][e.x] = e;
+                map[getKey(e.x, e.y)] = e;
                 moves++;
             }
         }
@@ -77,9 +82,9 @@ function simulate({ map, elves }, rounds) {
         const x = elve.x, y = elve.y;
         // Do nothing if no elve nearby
         let hasNb = false;
-        for (const off of map.allNeighborOffsets) {
-            const nx = x + off[0], ny = y + off[1];
-            if (map[ny][nx] != null) {
+        for (const offset of allNeighborOffsets) {
+            const nx = x + offset[0], ny = y + offset[1];
+            if (map[getKey(nx, ny)] != null) {
                 hasNb = true;
                 break;
             }
@@ -91,7 +96,7 @@ function simulate({ map, elves }, rounds) {
         for (const { dx, dy } of dirs) {
             const ox = dy, oy = -dx; // orthogonal to {dx,dy}
             const nx = x + dx, ny = y + dy;
-            if (!map[ny][nx] && !map[ny + oy][nx + ox] && !map[ny - oy][nx - ox]) {
+            if (!map[getKey(nx, ny)] && !map[getKey(nx + ox, ny + oy)] && !map[getKey(nx - ox, ny - oy)]) {
                 return { x: nx, y: ny };
             }
         }
