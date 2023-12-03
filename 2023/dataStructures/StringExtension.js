@@ -37,3 +37,7 @@ String.prototype.getCharSet = function() {
 String.prototype.filter = function(func) {
     return this.split("").filter(func).join("");
 }
+
+String.prototype.map = function(func) {
+    return this.split("").map(func).join("");
+}
