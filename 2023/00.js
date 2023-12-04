@@ -1,8 +1,7 @@
 require('./_helpers.js');
-const { data1 } = require('./00data');
+const { data0, data1 } = require('./00data');
 const Array2D = require('./dataStructures/Array2D.js');
 
-const data0 = ``;
 
 function prepareData(data) {
     const lines = data
