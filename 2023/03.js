@@ -1,5 +1,5 @@
 require('./_helpers.js');
-const { data0, data1 } = require('./03data.js');
+const { data0, data1 } = require('./03-data.js');
 
 function prepareData(data) {
     const lines = data

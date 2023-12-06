@@ -1,5 +1,5 @@
 require('./_helpers.js');
-const { data1 } = require('./01data.js');
+const { data1 } = require('./01-data.js');
 
 const data0 = `1abc2
 pqr3stu8vwx

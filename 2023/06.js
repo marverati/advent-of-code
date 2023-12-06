@@ -1,5 +1,5 @@
 require('./_helpers.js');
-const { data0, data1 } = require('./06data.js');
+const { data0, data1 } = require('./06-data.js');
 const { logTime, logProgress } = require('./_util.js');
 
 
