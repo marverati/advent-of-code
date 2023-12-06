@@ -247,6 +247,28 @@ function deepCopy(obj) {
     }
 }
 
+function logTime(caption, callback) {
+    const t0 = Date.now();
+    const result = callback();
+    const time = Date.now() - t0;
+    console.log(caption, result, ' (in ' + time + 'ms)');
+}
+
+const PROGRESS_DIFF = 5000;
+let lastProgressLog = -Infinity;
+function logProgress(caption, p, of = 1) {
+    const t = Date.now();
+    if (t - lastProgressLog > PROGRESS_DIFF) {
+        lastProgressLog = t;
+        const percent = (100 * p / of).toFixed(2);
+        if (caption == null) {
+            console.log("Progress: ", percent + "%");
+        } else {
+            console.log(percent + "%");
+        }
+    }
+}
+
 module.exports = {
     dfs,
     bfs,
@@ -266,4 +288,6 @@ module.exports = {
     cutString,
     cutStringMultiple,
     deepCopy,
+    logTime,
+    logProgress,
 };

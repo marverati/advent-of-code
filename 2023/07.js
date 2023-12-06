@@ -1,5 +1,5 @@
 require('./_helpers.js');
-const { data0, data1 } = require('./00data');
+const { data0, data1 } = require('./07data.js');
 const { logTime, logProgress } = require('./_util.js');
 const Array2D = require('./dataStructures/Array2D.js');
 
@@ -24,6 +24,6 @@ function part2(data) {
 
 
 const data = prepareData(data0);
-(data.length < 50 || data instanceof Object) && console.log(data);
+(data.length < 50) && console.log(data);
 logTime("Part 1: ", () => part1(data));
 logTime("Part 2: ", () => part2(data));
