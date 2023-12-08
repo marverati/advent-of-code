@@ -188,6 +188,23 @@ function fullyContains(from1, to1, from2, to2, checkBothDirections = false) {
     return false;
 }
 
+function getLowestCommonMultiple(nums) {
+    let result = nums[0];
+    for (let i = 1; i < nums.length; i++) {
+        result = getPairwiseMultiple(result, nums[i]);
+    }
+    return result;
+
+    function getPairwiseMultiple(a, b) {
+        let v = Math.max(a, b), other = Math.min(a, b);
+        const step = v;
+        while (other * Math.floor(v / other) !== v) {
+            v += step;
+        }
+        return v;
+    }
+}
+
 // *** STRINGS ***
 
 function centerString(s, chars) {
@@ -280,6 +297,7 @@ module.exports = {
     centerString,
     absMod,
     angleDiff,
+    getLowestCommonMultiple,
     padStart,
     range,
     getOverlap,
