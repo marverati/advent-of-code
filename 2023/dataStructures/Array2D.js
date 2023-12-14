@@ -90,11 +90,11 @@ class Array2D extends Array {
         this.forNeighborOffsets(x, y, this.allNeighborOffsets, handler);
     }
 
-    toString(cellToString = (c) => c) {
+    toString(cellToString = (c) => c, cellSeparator = ' ', lineSeparator = '\n') {
         let s = '';
         this.forEachRow((row, y) => {
-            s += row.map(cellToString).join(' ');
-            if (y < this.h - 1) { s += '\n'; }
+            s += row.map(cellToString).join(cellSeparator);
+            if (y < this.h - 1) { s += lineSeparator; }
         });
         return s;
     }
