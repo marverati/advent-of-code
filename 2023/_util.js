@@ -271,18 +271,31 @@ function logTime(caption, callback) {
     console.log(caption, result, ' (in ' + time + 'ms)');
 }
 
-const PROGRESS_DIFF = 5000;
+const PROGRESS_DIFF = 2000;
 let lastProgressLog = -Infinity;
-function logProgress(caption, p, of = 1) {
+let progressStart = Date.now();
+let lastProgress = 0;
+function logProgress(caption, p, of = 1, estimate = true) {
+    if (!caption) { caption = "Progress: "; }
+    if (p <= 0) {
+        progressStart = Date.now();
+    }
     const t = Date.now();
     if (t - lastProgressLog > PROGRESS_DIFF) {
-        lastProgressLog = t;
         const percent = (100 * p / of).toFixed(2);
-        if (caption == null) {
-            console.log("Progress: ", percent + "%");
-        } else {
-            console.log(percent + "%");
+        let estimation = "";
+        if (estimate) {
+            const duration = t - progressStart;
+            const durationSinceLastStep = t - lastProgressLog;
+            const changeSinceLastStep = (p / of) - lastProgress;
+            const velocity = changeSinceLastStep / durationSinceLastStep;
+            const remainingTime = (of - p) / of / velocity;
+            const remaining = (t > progressStart) ? (remainingTime / 1000).toFixed(3) + "s" : "..."
+            estimation = " (duration: " + (duration / 1000).toFixed(3) + "s, remaining: ~" + remaining + ")";
         }
+        console.log(caption, percent + "% " + estimation);
+        lastProgressLog = t;
+        lastProgress = p / of;
     }
 }
 
