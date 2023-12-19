@@ -16,8 +16,7 @@ Object.prototype.mapKeys = function(keyMapper, valueMapper = (v) => v) {
     const keys = Object.keys(this);
     for (const key of keys) {
         const newKey = keyMapper(key);
-        const value = this[key];
-        const newValue = keyMapper(value, key, newKey);
+        const newValue = valueMapper(this[key], key, newKey);
         result[newKey] = newValue;
     }
     return result;

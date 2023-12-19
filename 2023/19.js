@@ -1,6 +1,6 @@
 require('./_helpers.js');
 const { data1 } = require('./19-data.js');
-const { logTime, logProgress } = require('./_util.js');
+const { logTime, logProgress, deepCopy } = require('./_util.js');
 
 const data0 = `px{a<2006:qkq,m>2090:A,rfg}
 pv{a>1716:R,A}
@@ -132,7 +132,7 @@ function part2(data) {
                 const splitAt = (op === '<') ? value - 0.5 : value + 0.5;
                 const inside = splitAt >= bounds[attr].min && splitAt <= bounds[attr].max;
                 if (inside) {
-                    const newBounds = cloneBounds(bounds);
+                    const newBounds = deepCopy(bounds);
                     if (op === '<') {
                         newBounds[attr].max = value - 1;
                         bounds[attr].min = value;
@@ -149,18 +149,8 @@ function part2(data) {
     }
 
     function getBoundsCombinations(bounds) {
-        const keys = Object.keys(bounds);
-        const ranges = keys.map(key => bounds[key].max - bounds[key].min + 1);
-        const result = ranges.product();
-        return result;
-    }
-
-    function cloneBounds(bounds) {
-        const other = {};
-        for (const a of Object.keys(bounds)) {
-            other[a] = { ... bounds[a] };
-        }
-        return other;
+        const ranges = Object.values(bounds).map(bound => bound.max - bound.min + 1);
+        return ranges.product();
     }
 }
 
