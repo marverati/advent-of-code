@@ -41,3 +41,7 @@ String.prototype.filter = function(func) {
 String.prototype.map = function(func) {
     return this.split("").map(func).join("");
 }
+
+String.prototype.intrude = function(charsLeft, charsRight = charsLeft) {
+    return this.substring(charsLeft, this.length - charsRight);
+}

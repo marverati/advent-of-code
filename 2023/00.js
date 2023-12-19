@@ -10,6 +10,7 @@ function prepareData(data) {
         .map(line => line.trim()) // trim white space
         .filter(line => line !== "") // remove empty lines
     return lines;
+    return new Array2D(lines[0].length, lines.length, (x, y) => +lines[y][x]);
 }
 
 function part1(data) {
