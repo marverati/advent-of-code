@@ -1,0 +1,218 @@
+<html>
+    <head>
+        <title>Day 20 visualizer</title>
+<script>
+    const data1 = `%rq -> ch, sj
+%nf -> sm, rg
+%pc -> rz, zp
+%xt -> bc
+%nt -> kq, sj
+%hc -> kb, zp
+%rd -> lk
+%ml -> pp, xt
+%sq -> kl, sj
+%jg -> fl, rg
+&xl -> df
+%kl -> mb, sj
+%nd -> rg, jg
+&rg -> cs, zb, cp, vz, gp
+%mf -> zp
+%rz -> zp, fr
+%kk -> rg, bj
+%nb -> qj
+%pr -> pp
+&zp -> vl, lk, rd, kb, xl
+%fl -> nf, rg
+%tb -> pk, pp
+%bh -> pp, pr
+%nh -> sj, rq
+%lk -> hc
+%cp -> kk
+&ln -> df
+&xp -> df
+%bc -> nb, pp
+%lj -> rg
+%vz -> nd
+%vl -> lv, zp
+&gp -> df
+%hd -> pp, bq
+%fq -> pp, bh
+%pk -> fq, pp
+%cs -> zb, rg
+%sn -> fd
+%kq -> sj, qq
+%zb -> vz
+%lv -> zp, rd
+%qj -> pp, hd
+%fd -> nt
+&df -> rx
+broadcaster -> vl, cs, cn, ml
+%bq -> tb
+%kb -> pc
+%cn -> sn, sj
+%qq -> sq
+%mb -> sj, nh
+%jd -> zp, mf
+&sj -> xp, qq, cn, fd, sn
+&pp -> ln, ml, xt, bq, nb
+%sm -> rg, cp
+%ch -> sj
+%bj -> lj, rg
+%fr -> zp, mr
+%mr -> zp, jd`
+    function prepareData(data) {
+        const lines = data
+            .split("\n") // turn into array of lines
+            .map(line => line.trim()) // trim white space
+            .filter(line => line !== "") // remove empty lines
+            .map(line => {
+                const parts = line.split(" -> ")
+                const type = parts[0][0];
+                const name = parts[0].slice(1); // "roadcaster" is 1 name!
+                const targets = parts[1].split(", ");
+                return {
+                    type,
+                    name,
+                    fullName: type + name,
+                    targets,
+                    state: false, // onoff for % flip-flops, remembered high/low for & conjunction modules
+                    memory: {},
+                    x: 750 + (2 * Math.random() - 1) * 300,
+                    y: 500 + (2 * Math.random() - 1) * 300,
+                    vx: 0,
+                    vy: 0,
+                };
+            });
+        const obj = {}
+        for (const line of lines) {
+            obj[line.name] = line;
+        }
+        return obj;
+    }
+    const data = prepareData(data1);
+    data["rx"] = {
+        type: "!",
+        name: "rx",
+        fullName: "!rx",
+        targets: [],
+        state: false,
+        memory: {},
+        x: 750,
+        y: 500,
+        vx: 0,
+        vy: 0,
+    };
+    console.log(data);
+
+    function render() {
+        if (window.paused) { return; }
+        const cnv = document.getElementById("canvas");
+        cnv.width = cnv.width;
+        const ctx = cnv.getContext("2d");
+
+        // Update positions; each module tries to achieve a distance of 50 to its targets
+        const desiredDistance = 100;
+        const desiredOtherDistance = 500;
+
+        for (let updates = 0; updates < 10; updates++) {
+            for (const name in data) {
+                const module = data[name];
+                // Attract to own targets
+                const targets = module.targets.map(name => data[name]);
+                const dx = targets.reduce((sum, target) => sum + target.x - module.x, 0);
+                const dy = targets.reduce((sum, target) => sum + target.y - module.y, 0);
+                const d = 0.001 + Math.sqrt(dx * dx + dy * dy);
+                const vx = dx / d * (desiredDistance - d) / 1000;
+                const vy = dy / d * (desiredDistance - d) / 1000;
+                module.vx -= vx;
+                module.vy -= vy;
+                // But repell from other modules
+                for (const otherName in data) {
+                    if (otherName === name) continue;
+                    const other = data[otherName];
+                    const dx = other.x - module.x;
+                    const dy = other.y - module.y;
+                    const d = 0.001 + Math.sqrt(dx * dx + dy * dy);
+                    const vx = dx / d * (desiredOtherDistance - d) / 5000;
+                    const vy = dy / d * (desiredOtherDistance - d) / 5000;
+                    module.vx -= vx;
+                    module.vy -= vy;
+                }
+            }
+            // Mildly push all nodes towards origin
+            for (const name in data) {
+                const module = data[name];
+                const dx = cnv.width / 2 - module.x;
+                const dy = cnv.height / 2 - module.y;
+                const d = 0.001 + Math.sqrt(dx * dx + dy * dy);
+                const vx = dx / d * 0.03;
+                const vy = dy / d * 0.03;
+                module.vx += vx;
+                module.vy += vy;
+                module.vx *= 0.9;
+                module.vy *= 0.9;
+                module.x += module.vx;
+                module.y += module.vy;
+            }
+        }
+
+        // Draw
+
+        // Render connections
+        for (const name in data) {
+            const module = data[name];
+            for (const targetName of module.targets) {
+                const target = data[targetName];
+                ctx.beginPath();
+                ctx.moveTo(module.x, module.y);
+                ctx.lineTo(target.x, target.y);
+                ctx.strokeStyle = "black";
+                ctx.stroke();
+                // Arrow head
+                const dx = target.x - module.x;
+                const dy = target.y - module.y;
+                const d = Math.sqrt(dx * dx + dy * dy);
+                const tx = module.x + dx / d * (d - 20);
+                const ty = module.y + dy / d * (d - 20);
+                const ux = dx / d;
+                const uy = dy / d;
+                const vx = -uy;
+                const vy = ux;
+                ctx.beginPath();
+                ctx.moveTo(tx, ty);
+                ctx.lineTo(tx - 10 * ux + 5 * vx, ty - 10 * uy + 5 * vy);
+                ctx.lineTo(tx - 10 * ux - 5 * vx, ty - 10 * uy - 5 * vy);
+                ctx.closePath();
+                ctx.fillStyle = "black";
+                ctx.fill();
+            }
+        }
+
+        // Render nodes
+        for (const name in data) {
+            const module = data[name];
+            ctx.beginPath();
+            ctx.arc(module.x, module.y, 20, 0, 2 * Math.PI);
+            ctx.strokeStyle = "black";
+            ctx.fillStyle = module.type === "&" ? "lightgreen" : module.type === "%" ? "lightblue" : "white";
+            ctx.fill();
+            ctx.stroke();
+            // Draw name
+            ctx.fillStyle = "black";
+            ctx.font = "10px sans-serif";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(module.fullName, module.x, module.y);
+        }
+
+        requestAnimationFrame(render);
+    }
+
+    setTimeout(() => render(), 0);
+
+</script>
+    </head>
+    <body>
+        <canvas id="canvas" width="3000" height="1800"></canvas>
+    </body>
+</html>

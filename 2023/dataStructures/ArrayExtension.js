@@ -49,6 +49,12 @@ Array.prototype.at = function(index) {
     return this[index];
 }
 
+Array.prototype.toObject = function(valueToKey = v => v) {
+    const obj = {};
+    this.forEach((v, i) => obj[valueToKey(v, i)] = v);
+    return obj;
+}
+
 Object.defineProperty(Array.prototype, 'first', {
     get: function() {
         return this[0];
