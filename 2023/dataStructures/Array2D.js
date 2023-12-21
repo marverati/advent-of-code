@@ -1,3 +1,4 @@
+const { absMod } = require("../_util");
 
 class Array2D extends Array {
     constructor(wOrFunction, h, valueOrGenerator) {
@@ -73,17 +74,19 @@ class Array2D extends Array {
         return null;
     }
 
-    forNeighborOffsets(x, y, offsets, handler) {
+    forNeighborOffsets(x, y, offsets, handler, wrap = false) {
         for (const off of offsets) {
             const cx = x + off[0], cy = y + off[1];
             if (this.isInside(cx, cy)) {
                 handler(this.get(cx, cy), cx, cy);
+            } else if (wrap) { // wrap around edges?
+                handler(this.get( absMod(cx, this.w), absMod(cy, this.h)), cx, cy);
             }
         }
     }
 
-    forDirectNeighbors(x, y, handler) {
-        this.forNeighborOffsets(x, y, this.directNeighborOffsets, handler);
+    forDirectNeighbors(x, y, handler, wrap = false) {
+        this.forNeighborOffsets(x, y, this.directNeighborOffsets, handler, wrap);
     }
 
     forAllNeighbors(x, y, handler) {
@@ -93,7 +96,7 @@ class Array2D extends Array {
     toString(cellToString = (c) => c, cellSeparator = ' ', lineSeparator = '\n') {
         let s = '';
         this.forEachRow((row, y) => {
-            s += row.map(cellToString).join(cellSeparator);
+            s += row.map((v, i) => cellToString(v, i, y)).join(cellSeparator);
             if (y < this.h - 1) { s += lineSeparator; }
         });
         return s;
@@ -120,7 +123,10 @@ class Array2D extends Array {
     }
 
     countCells(testFunc = c => !!c) {
-        return this.reduceCells((v, cell, x, y) => v + (testFunc(cell, x, y) ? 1 : 0), 0);
+        return this.reduceCells((v, cell, x, y) => {
+            const test = testFunc(cell, x, y);
+            return v + (test > 0 ? test : (test ? 1 : 0));
+        }, 0);
     }
 
     reduceCells(reducer, initial) {
