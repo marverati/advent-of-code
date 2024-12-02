@@ -27,6 +27,6 @@ function part2(data) {
 
 const data0 = data0a || data0b;
 const data = prepareData(data0);
-(data.length < 50 || data instanceof Object) && console.log(data);
+(data.length < 50 || data instanceof Object && !(data instanceof Array)) && console.log(data);
 logTime("Part 1: ", () => part1(data));
 logTime("Part 2: ", () => part2(data));

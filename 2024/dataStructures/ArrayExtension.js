@@ -19,6 +19,10 @@ Array.create = function(length = 0, defaultElementOrGenerator = null) {
 }
 
 Array.prototype.count = function(filter = () => true) {
+    if (!(filter instanceof Function)) {
+        const value = filter;
+        filter = (v) => v === value;
+    }
     let count = 0;
     this.forEach(v => { if (filter(v)) { count++; } });
     return count;
@@ -53,6 +57,12 @@ Array.prototype.toObject = function(valueToKey = v => v) {
     const obj = {};
     this.forEach((v, i) => obj[valueToKey(v, i)] = v);
     return obj;
+}
+
+Array.prototype.drop = function(fromIndex, count = 1) {
+    const copy = this.slice();
+    copy.splice(fromIndex, count);
+    return copy;
 }
 
 Object.defineProperty(Array.prototype, 'first', {

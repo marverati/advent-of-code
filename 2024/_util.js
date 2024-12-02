@@ -285,6 +285,33 @@ function zipMap(arr1, arr2, mapper) {
     return result;
 }
 
+function pairwise(array, handler) {
+    for (let i = 1; i < array.length; i++) {
+        if (handler(array[i - 1], array[i], i - 1, i) === false) {
+            return
+        }
+    }
+}
+
+/**
+ * Iterator, emitting adjacent pairs of values and indices.
+ * @param {*} array 
+ */
+function* yieldPairs(report) {
+    for (let i = 0; i < report.length - 1; i++) {
+        yield [report[i], report[i + 1]];
+    }
+}
+
+/**
+ * Returns an array of pairs of adjacent values and indices from the input array.
+ * @param {*} array 
+ * @returns 
+ */
+function getPairs(array) {
+    return [...yieldPairs(array)];
+}
+
 function deepCopy(obj) {
     if (obj instanceof Array) {
         // array
@@ -356,6 +383,9 @@ module.exports = {
     range,
     zip,
     zipMap,
+    pairwise,
+    getPairs,
+    yieldPairs,
     getOverlap,
     overlaps,
     fullyContains,

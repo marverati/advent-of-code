@@ -1,6 +1,6 @@
 require('./_helpers.js');
 const { data0: data0a, data1 } = require('./01-data.js');
-const { logTime, sortNums, zip, zipMap } = require('./_util.js');
+const { logTime, sortNums, zipMap } = require('./_util.js');
 
 const data0b = ``;
 
@@ -26,12 +26,12 @@ function part1(data) {
 function part2(data) {
     const l = data.left.slice();
     const r = data.right.slice();
-    return l.map((vl, i) => vl * r.filter(v => v === vl).length).sum();
+    return l.map((vl) => vl * r.count(vl)).sum();
 }
 
 
 const data0 = data0a || data0b;
 const data = prepareData(data1);
-(data.length < 50 || data instanceof Object) && console.log(data);
+(data.length < 50 || data instanceof Object && !(data instanceof Array)) && console.log(data);
 logTime("Part 1: ", () => part1(data));
 logTime("Part 2: ", () => part2(data));
