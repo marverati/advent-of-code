@@ -161,6 +161,14 @@ function getMin(numbers) {
     return numbers.reduce((a, b) => a < b ? a : b, Infinity);
 }
 
+function getMinIndex(...indices) {
+    return indices.map(cleanIndex).min();
+}
+
+function cleanIndex(index) {
+    return index < 0 ? Infinity : index;
+}
+
 function getMax(numbers) {
     return numbers.reduce((a, b) => a > b ? a : b, -Infinity);
 }
@@ -234,6 +242,10 @@ function padStart(s, char, len) {
         s = char + s;
     }
     return s;
+}
+
+function dropFromString(s, pos, length = 1) {
+    return s.substring(0, pos) + s.substring(pos + length);
 }
 
 function cutString(s, atPos) {
@@ -374,11 +386,14 @@ module.exports = {
     getMean,
     getMin,
     getMax,
+    cleanIndex,
+    getMinIndex,
     centerString,
     absMod,
     angleDiff,
     getLowestCommonMultiple,
     padStart,
+    dropFromString,
     sortNums,
     range,
     zip,
