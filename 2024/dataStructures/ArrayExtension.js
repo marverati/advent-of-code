@@ -53,9 +53,10 @@ Array.prototype.at = function(index) {
     return this[index];
 }
 
-Array.prototype.toObject = function(valueToKey = v => v) {
+Array.prototype.toObject = function(keyGenerator = v => v, valueGenerator = (v, i) => i) {
+    if (!keyGenerator) { keyGenerator = v => v; }
     const obj = {};
-    this.forEach((v, i) => obj[valueToKey(v, i)] = v);
+    this.forEach((v, i) => obj[keyGenerator(v, i)] = valueGenerator(v, i));
     return obj;
 }
 

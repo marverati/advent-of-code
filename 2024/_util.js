@@ -1,4 +1,5 @@
 
+
 // Paste & execute in console of input data to turn long-winded list into compact array
 function listToArray() {
     const txt = document.body.textContent;
@@ -18,6 +19,25 @@ function listToArray() {
     document.body.style.whiteSpace = "pre-line";
 
     return result;
+}
+
+
+
+function assert(name, check, error) {
+    if (!check) {
+        let errorMessage = `Assertion failed: ${name}`;
+        if (error) {
+            errorMessage += ` (${error})`;
+        }
+        throw new Error(errorMessage);
+    }
+}
+
+function assertEqual(name, actual, expected) {
+    if (actual !== expected) {
+        const errorMessage = `Assertion failed: Got ${actual}, expected ${expected}`;
+        throw new Error(errorMessage);
+    }
 }
 
 /**
@@ -377,6 +397,8 @@ function logProgress(caption, p, of = 1, estimate = true) {
 }
 
 module.exports = {
+    assert,
+    assertEqual,
     dfs,
     bfs,
     floodFill,
