@@ -44,6 +44,10 @@ Array.prototype.min = function() {
     return Math.min(... this);
 }
 
+Array.prototype.withinBounds = function(x, y) {
+    return x >= 0 && y >= 0 && x < this.w && y < this.h;
+}
+
 Array.prototype.sortAsc = function() { return this.sort((a, b) => a > b ? -1 : a < b ? 1 : 0); }
 
 Array.prototype.sortDesc = function() { return this.sort((a, b) => a > b ? 1 : a < b ? -1 : 0); }

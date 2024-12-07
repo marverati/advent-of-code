@@ -369,7 +369,7 @@ function logTime(caption, callback) {
 }
 
 const PROGRESS_DIFF = 2000;
-let lastProgressLog = -Infinity;
+let lastProgressLog = Date.now();
 let progressStart = Date.now();
 let lastProgress = 0;
 function logProgress(caption, p, of = 1, estimate = true) {
