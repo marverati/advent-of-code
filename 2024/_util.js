@@ -35,13 +35,13 @@ function assert(name, check, error) {
 
 function assertEqual(name, actual, expected) {
     if (actual !== expected) {
-        const errorMessage = `Assertion failed: Got ${actual}, expected ${expected}`;
+        const errorMessage = `Assertion failed: ${name} - Got ${actual}, expected ${expected}`;
         throw new Error(errorMessage);
     }
 }
 
 /**
- * Breadth first search through any data structure. Make sure that getNeighborsFn returns
+ * Depth first search through any data structure. Make sure that getNeighborsFn returns
  * stable object references, and doesn't generate them on the fly. Alternatively you can
  * provide an elToReference function that e.g. maps your objects to strings that act as
  * unique keys for different elements, which can e.g. be useful when you're dealing with

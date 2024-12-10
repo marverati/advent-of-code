@@ -25,12 +25,12 @@ function part2(data) {
 }
 
 
-const sampleData = prepareData(data0a || data0b);
-console.log(sampleData);
-assertEqual("Part 1 works with example", part1(sampleData), undefined);
-assertEqual("Part 2 works with example", part2(sampleData), undefined);
+const sampleData = () => prepareData(data0a || data0b);
+console.log(sampleData());
+assertEqual("Part 1 works with example", part1(sampleData()), undefined);
+assertEqual("Part 2 works with example", part2(sampleData()), undefined);
 
-const userData = prepareData(data1);
-// (userData.length < 50 || userData instanceof Object && !(userData instanceof Array)) && console.log(userData);
-logTime("Part 1: ", () => part1(userData));
-logTime("Part 2: ", () => part2(userData));
+const userData = () => prepareData(data1);
+// console.log(userData());
+logTime("Part 1: ", () => part1(userData()));
+logTime("Part 2: ", () => part2(userData()));
