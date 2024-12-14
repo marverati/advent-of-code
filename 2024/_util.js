@@ -361,6 +361,18 @@ function deepCopy(obj) {
     }
 }
 
+function sleep(d) {
+    return new Promise((resolve, reject) => {
+        setTimeout(resolve, d);
+    });
+}
+
+function logDelayed(...args) {
+    setTimeout(() => {
+        console.log(...args);
+    }, 0)
+}
+
 function logTime(caption, callback) {
     const t0 = Date.now();
     const result = callback();
@@ -429,6 +441,8 @@ module.exports = {
     cutString,
     cutStringMultiple,
     deepCopy,
+    sleep,
+    logDelayed,
     logTime,
     logProgress,
 };
