@@ -194,7 +194,7 @@ function getMax(numbers) {
 }
 
 function absMod(v, div) {
-    return (v >= 0) ? (v % div) : ((v % div) + div);
+    return ((v % div) + div) % div;
 }
 
 function angleDiff(a1, a2) {
