@@ -70,6 +70,14 @@ Array.prototype.drop = function(fromIndex, count = 1) {
     return copy;
 }
 
+Array.prototype.rotate = function(indexOffset) {
+    indexOffset = absMod(-indexOffset, this.length);
+    return [
+        ...this.slice(indexOffset),
+        ...this.slice(0, indexOffset),
+    ];
+}
+
 Object.defineProperty(Array.prototype, 'first', {
     get: function() {
         return this[0];

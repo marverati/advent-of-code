@@ -197,6 +197,10 @@ function absMod(v, div) {
     return ((v % div) + div) % div;
 }
 
+function trunc(v) {
+    return v >= 0 ? Math.floor(v) : Math.ceil(v);
+}
+
 function angleDiff(a1, a2) {
     const diff = absMod(a2 - a1, 2 * Math.PI);
     return diff > Math.PI ? diff - 2 * Math.PI : diff;
@@ -424,6 +428,7 @@ module.exports = {
     getMinIndex,
     centerString,
     absMod,
+    trunc,
     angleDiff,
     getLowestCommonMultiple,
     padStart,
