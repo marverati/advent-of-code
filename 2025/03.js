@@ -17,52 +17,37 @@ function prepareData(data) {
     return lines;
 }
 
-function part1(data) {
+const part1 = (data) => sumLargestNumbers(data, 2);
+const part2 = (data) => sumLargestNumbers(data, 12);
+
+function sumLargestNumbers(data, digitsPerNumber) {
     let sum = 0;
     for (const line of data) {
-        let max = 0;
-        for (let i = 0; i < line.length - 1; i++) {
-            for (let j = i + 1; j < line.length; j++) {
-                const num = 10 * (+line[i]) + (+line[j]);
-                if (num > max) { max = num; }
-            }
-        }
-        sum += max;
+        sum += getMaxNum(line, digitsPerNumber);
     }
     return sum;
 }
 
-function part2(data) {
-    let sum = 0;
-    for (const line of data) {
-        const values = getMaxNum(line);
-        let v = 0;
-        while (values.length) {
-            v = 10 * v + values.shift();
-        }
-        console.log(values, v);
-        sum += v;
-    }
-    return sum;
-}
-
-function getMaxNum(line, nums = 12) {
-    if (nums < 1) { return []; }
-    // Find maximum when nums-1 are left on right
+function getMaxNum(line, nums) {
+    if (nums < 1) { return 0; }
+    // At least (nums-1) digits need to remain on the right side, find maximum outside of those
+    // (We can prioritize current number greedily, because it is left-most in number, so has highest importance for the absolute)
     const leftString = line.substr(0, line.length - (nums - 1));
-    // Pick left-most max number
+    // Inside of this string, we look for the left-most maximum digit
     const maxNum = leftString.split('').map(c => +c).max();
     const pos = leftString.indexOf(maxNum);
     const rest = getMaxNum(line.substr(pos + 1), nums - 1);
-    rest.unshift(maxNum);
-    return rest;
+    return (+maxNum) * 10 ** (nums - 1) + rest;
 }
 
-
+// Data getters
 const sampleData = () => prepareData(data0a || data0b);
-assertEqual("Part 1 works with example", part1(sampleData()), 357);
-assertEqual("Part 2 works with example", part2(sampleData()), 3121910778619);
-
 const userData = () => prepareData(data1);
+
+// Part 1
+assertEqual("Part 1 works with example", part1(sampleData()), 357);
 logTime("Part 1: ", () => part1(userData()));
+
+// Part 2
+assertEqual("Part 2 works with example", part2(sampleData()), 3121910778619);
 logTime("Part 2: ", () => part2(userData()));
