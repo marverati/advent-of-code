@@ -15,22 +15,31 @@ function prepareData(data) {
 }
 
 function part1(data) {
+    let result = 0;
+    for (const line of data) {
 
-    return
+    }
+    return result;
 }
 
 function part2(data) {
-    
-    return
+    let result = 0;
+    for (const line of data) {
+
+    }
+    return result;
 }
 
-
+// Prepare data getters
 const sampleData = () => prepareData(data0a || data0b);
-console.log(sampleData());
-assertEqual("Part 1 works with example", part1(sampleData()), undefined);
-assertEqual("Part 2 works with example", part2(sampleData()), undefined);
-
 const userData = () => prepareData(data1);
+console.log(sampleData());
 // console.log(userData());
+
+// Part 1
+assertEqual("Part 1 works with example", part1(sampleData()), 0); // <- adjust
 logTime("Part 1: ", () => part1(userData()));
+
+// Part 2
+assertEqual("Part 2 works with example", part2(sampleData()), 0); // <- adjust
 logTime("Part 2: ", () => part2(userData()));
