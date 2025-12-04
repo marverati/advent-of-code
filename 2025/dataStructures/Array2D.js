@@ -85,12 +85,37 @@ class Array2D extends Array {
         }
     }
 
-    forDirectNeighbors(x, y, handler, wrap = false) {
+    for4Neighbors(x, y, handler, wrap = false) {
         this.forNeighborOffsets(x, y, this.directNeighborOffsets, handler, wrap);
     }
 
-    forAllNeighbors(x, y, handler) {
+    for8Neighbors(x, y, handler) {
         this.forNeighborOffsets(x, y, this.allNeighborOffsets, handler);
+    }
+
+    getForOffsets(x, y, offsets, wrap = false) {
+        let positions = offsets.map(off => ({
+            x: x + off[0],
+            y: y + off[1],
+        }));
+        if (wrap) {
+            positions = positions.map(p => ({ x: absMod(p.x, this.w), y: absMod(p.y, this.h) }))
+        } else {
+            positions = positions.filter(p => this.isInside(p.x, p.y));
+        }
+        return positions.map(p => ({
+            x: p.x,
+            y: p.y,
+            v: this.get(p.x, p.y),
+        }));
+    }
+
+    get4Neighbors(x, y, wrap = false) {
+        return this.getForOffsets(x, y, this.directNeighborOffsets, wrap);
+    }
+
+    get8Neighbors(x, y, wrap = false) {
+        return this.getForOffsets(x, y, this.allNeighborOffsets, wrap);
     }
 
     toString(cellToString = (c) => c, cellSeparator = ' ', lineSeparator = '\n') {
@@ -147,6 +172,14 @@ class Array2D extends Array {
 
     combineWith(otherArray2D, combiner) {
         this.processCells((v, x, y) => combiner(v, otherArray2D[y][x], x, y));
+    }
+
+    flatten() {
+        const result = [];
+        for (const row of this) {
+            result.push(...row);
+        }
+        return result;
     }
 
 }
