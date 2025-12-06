@@ -33,10 +33,34 @@ function assert(name, check, error) {
     }
 }
 
+function assertSoft(name, check, error) {
+    softCatch(() => assert(name, check, error));
+}
+
 function assertEqual(name, actual, expected) {
     if (actual !== expected) {
         const errorMessage = `Assertion failed: ${name} - Got ${actual}, expected ${expected}`;
         throw new Error(errorMessage);
+    }
+}
+
+function assertEqualSoft(name, actual, expected) {
+    softCatch(() => assertEqual(name, actual, expected));
+}
+
+function softCatch(call) {
+    try {
+        call();
+    } catch(e) {
+        console.error(e);
+        wait(700);
+    }
+}
+
+function wait(ms) {
+    const end = Date.now() + ms;
+    while (Date.now() < end) {
+        // do nothing
     }
 }
 
@@ -414,7 +438,11 @@ function logProgress(caption, p, of = 1, estimate = true) {
 
 module.exports = {
     assert,
+    assertSoft,
     assertEqual,
+    assertEqualSoft,
+    softCatch,
+    wait,
     dfs,
     bfs,
     floodFill,
