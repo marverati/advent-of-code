@@ -1,6 +1,6 @@
 require('./_helpers.js');
 const { data0: data0a, data1 } = require('./00-data.js');
-const { assertEqual, logTime, logProgress } = require('./_util.js');
+const { assertEqual, logTime, logProgress, assertEqualSoft } = require('./_util.js');
 const Array2D = require('./dataStructures/Array2D.js');
 
 const data0b = ``
@@ -37,9 +37,9 @@ console.log(sampleData());
 // console.log(userData());
 
 // Part 1
-assertEqual("Part 1 works with example", part1(sampleData()), 0); // <- adjust
+assertEqualSoft("Part 1 works with example", part1(sampleData()), 0); // <- adjust
 logTime("Part 1: ", () => part1(userData()));
 
 // Part 2
-assertEqual("Part 2 works with example", part2(sampleData()), 0); // <- adjust
+assertEqualSoft("Part 2 works with example", part2(sampleData()), 0); // <- adjust
 logTime("Part 2: ", () => part2(userData()));
