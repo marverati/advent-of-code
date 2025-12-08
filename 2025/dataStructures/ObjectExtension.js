@@ -52,3 +52,29 @@ Object.prototype.filterValues = function(filterFunc) {
     }
     return result;
 }
+
+/**
+ * Traces a path through the object via the provided getter, gathering
+ * objects until a falsy value is encountered. All truthy values will
+ * be returned in an array in order of traversal.
+ * If a string is provided, the corresponding object key will be
+ * searched (which primarily makes sense of the property of that
+ * name yields objects of the same type).
+ *
+ * @param {Function | string} getterOrKey 
+ * @param {number?} maxCount 
+ * @returns 
+ */
+Object.prototype.traverseChain = function(getterOrKey, maxCount = Infinity) {
+    let getter = getterOrKey;
+    if (typeof getterOrKey === 'string') {
+        getter = (obj) => obj[getterOrKey];
+    }
+    let obj = this;
+    const result = [];
+    for (let i = 0; i < maxCount && obj; i++) {
+        result.push(obj);
+        obj = getter(obj);
+    }
+    return result;
+}
